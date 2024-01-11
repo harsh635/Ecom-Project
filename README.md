@@ -27,3 +27,5 @@ npm install
 3.Start the server:
 npm run dev
 Open your browser and visit http://localhost:5173/ to visit the Quick Buy application.
+
+You can visit the project on https://squibix-ecom-project.vercel.app/
