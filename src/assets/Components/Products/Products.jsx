@@ -4,48 +4,40 @@ import { Link } from 'react-router-dom';
 function Products( {products=[]}){
   
   const [data, setData] = useState(products);
-
-  const filterItem = (cat) => {
-    if(cat === '0'){ 
-      setData(products)
-    }
-    else if (cat === 'category') {
-      setData(products);
-    } else {
-      const updatedList = products.filter((item) => {
-        return item.category === cat;
-      });
-      setData(updatedList);
-    }
-  };
-
-  
- 
-  const sortItems = (pricerange) => {
-    //console.log(pricerange);
-    if(pricerange === '0'){
-      
-      setData(products)
-    }
-    else if(pricerange === '100'){
-      const updatedL = products.filter((item) =>{
+  const [filters,setFilters]=useState({price:[],cat:[]})
+     
+const filterProducts=()=>{
+  var filteredProduct=products;
+  console.log(filters);
+  if(filters.cat.length>0 && filters.cat[0]!=='0')
+  {
+    filteredProduct=filteredProduct.filter((item) => {
+      return item.category === filters.cat[0];})
+  }
+  if(filters.price.length>0 && filters.price[0]!=='0')
+  {
+    var pricerange = filters.price[0];
+    if(pricerange === '100'){
+      filteredProduct = filteredProduct.filter((item) =>{
          return item.price <= pricerange;
       })
-      setData(updated)
     }
     else if(pricerange === '101'){
-      const updated = products.filter((item) =>{
+      filteredProduct = filteredProduct.filter((item) =>{
          return item.price > pricerange;
       })
-      setData(updated)
     }
     else if(pricerange === '1000'){
-      const updated = products.filter((item) =>{
+      filteredProduct = filteredProduct.filter((item) =>{
          return item.price < pricerange;
       })
-      setData(updated)
   }
+  }
+  setData(filteredProduct);
 }
+useEffect(()=>{
+  filterProducts();
+},[filters]);
   
 
 return (
@@ -56,7 +48,7 @@ return (
     <div className="flex items-center justify-center h-full w-full">
       <div className="relative mb-2 flex items-center after:w-[8px] after:h-[8px] after:border-black/70 after:border-b after:border-r after:transform after:rotate-45 after:absolute after:right-3">
         <select className="text-black/70 bg-white px-3 py-2 transition-all cursor-pointer hover:border-blue-600/30 border border-gray-200 rounded-lg outline-blue-600/50 appearance-none invalid:text-black/30 w-64"
-        onChange={(e)=>{sortItems(e.target.value)}}>
+        onChange={(e)=>{setFilters({...filters,price:[e.target.value]})}}>
           <option value="0">Filter By Price</option>
           <option value="100">upto $100</option>
           <option value="1000">upto $1000</option>
@@ -71,7 +63,7 @@ return (
       <div className="flex items-center justify-center h-full w-full">
         <div className="relative mb-2 flex items-center after:w-[8px] after:h-[8px] after:border-black/70 after:border-b after:border-r after:transform after:rotate-45 after:absolute after:right-3">
           <select className="text-black/70 bg-white px-3 py-2 transition-all cursor-pointer hover:border-blue-600/30 border border-gray-200 rounded-lg outline-blue-600/50 appearance-none invalid:text-black/30 w-64"
-          onChange={(e)=>{filterItem(e.target.value)}}>
+          onChange={(e)=>{setFilters({...filters,cat:[e.target.value]})}}>
             <option value="0">Filter By Category</option>
             <option value="men's clothing">Men's Clothing</option>
             <option value="women's clothing">Women's Clothing</option>
